@@ -6,6 +6,7 @@
  *
  * @author  Sébastien MALOT <sebastien@malot.fr>
  * @date    2017-01-03
+ *
  * @license LGPLv3
  * @url     <https://github.com/smalot/pdfparser>
  *
@@ -25,12 +26,9 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program.
  *  If not, see <http://www.pdfparser.org/sites/default/LICENSE.txt>.
- *
  */
 
 namespace Smalot\PdfParser;
-
-use Smalot\PdfParser\Element\ElementDate;
 
 /**
  * Technical references :
@@ -40,11 +38,9 @@ use Smalot\PdfParser\Element\ElementDate;
  * - http://cpansearch.perl.org/src/JV/PostScript-Font-1.10.02/lib/PostScript/ISOLatin1Encoding.pm
  * - http://cpansearch.perl.org/src/JV/PostScript-Font-1.10.02/lib/PostScript/ISOLatin9Encoding.pm
  * - http://cpansearch.perl.org/src/JV/PostScript-Font-1.10.02/lib/PostScript/StandardEncoding.pm
- * - http://cpansearch.perl.org/src/JV/PostScript-Font-1.10.02/lib/PostScript/WinAnsiEncoding.pm
+ * - http://cpansearch.perl.org/src/JV/PostScript-Font-1.10.02/lib/PostScript/WinAnsiEncoding.pm.
  *
  * Class Document
- *
- * @package Smalot\PdfParser
  */
 class Document
 {
@@ -68,17 +64,11 @@ class Document
      */
     protected $details = null;
 
-    /**
-     *
-     */
     public function __construct()
     {
         $this->trailer = new Header(array(), $this);
     }
 
-    /**
-     *
-     */
     public function init()
     {
         $this->buildDictionary();
@@ -151,7 +141,7 @@ class Document
      */
     public function setObjects($objects = array())
     {
-        $this->objects = (array)$objects;
+        $this->objects = (array) $objects;
 
         $this->init();
     }
@@ -209,6 +199,7 @@ class Document
 
     /**
      * @return Page[]
+     *
      * @throws \Exception
      */
     public function getPages()
@@ -221,6 +212,7 @@ class Document
             $object = $this->objects[$id]->get('Pages');
             if (method_exists($object, 'getPages')) {
                 $pages = $object->getPages(true);
+
                 return $pages;
             }
         }
@@ -271,6 +263,24 @@ class Document
         }
 
         return implode("\n\n", $texts);
+    }
+
+    /**
+     * @param Page $page
+     *
+     * @return array
+     */
+    public function getTextArrayByPageAndSection(Page $page = null)
+    {
+        $textArrayByPageAndSection = array();
+        $pages = $this->getPages();
+        foreach ($pages as $index => $page) {
+            if ($textArrayBySection = $page->getTextArrayBySection()) {
+                $textArrayByPageAndSection[$index] = $textArrayBySection;
+            }
+        }
+
+        return $textArrayByPageAndSection;
     }
 
     /**
