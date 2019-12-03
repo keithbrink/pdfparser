@@ -778,8 +778,9 @@ class PDFObject
                         if (is_null($current_font)) {
                             // Fallback
                             // TODO : Improve
-                            $text[] = $command[self::COMMAND][0][self::COMMAND];
-                            continue;
+                            //$text[] = $command[self::COMMAND][0][self::COMMAND];
+                            throw new \Exception('Unknown font detected while decoding PDF string.');
+                            continue 2;
                         }
                         $sub_text = $current_font->decodeText($command[self::COMMAND]);
                         $text[] = $sub_text;
